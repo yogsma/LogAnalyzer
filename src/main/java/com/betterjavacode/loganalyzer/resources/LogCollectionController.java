@@ -1,6 +1,5 @@
 package com.betterjavacode.loganalyzer.resources;
 
-import com.betterjavacode.loganalyzer.models.LogContent;
 import com.betterjavacode.loganalyzer.service.LogCollectionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -55,7 +54,7 @@ public class LogCollectionController
             throw new Exception("Provide a file name");
         }
 
-        List<String> logContents = logCollectionService.getLogContentFromFile(fileName, topN);
+        List<String> logContents = logCollectionService.getTopLogContentFromFile(fileName, topN);
 
         if(logContents.isEmpty())
         {
@@ -69,8 +68,18 @@ public class LogCollectionController
     }
 
     @GetMapping("/search")
-    public List<String> searchLogContent(@RequestParam("keyword") String keyword)
+    public ResponseEntity<Map<String, Object>> searchLogContent(@RequestParam("keyword") String keyword)
     {
-        return null;
+        List<String> matchingContent = logCollectionService.searchForTextInLogFiles(keyword);
+
+        if(matchingContent.isEmpty())
+        {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        Map<String, Object> responseObject = new HashMap<>();
+        responseObject.put("result", matchingContent);
+
+        return new ResponseEntity<>(responseObject, HttpStatus.OK);
     }
 }
