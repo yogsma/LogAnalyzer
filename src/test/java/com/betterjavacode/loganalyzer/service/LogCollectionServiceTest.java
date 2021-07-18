@@ -42,4 +42,17 @@ public class LogCollectionServiceTest
         assertEquals(logContent.get(7), "[2021-07-10 11:42:34,121] INFO [Controller id=0] Deleting log dir event notifications (kafka.controller.KafkaController)");
 
     }
+
+    @Test
+    public void testGetTopLogContentFromFile() throws URISyntaxException
+    {
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(classLoader.getResource("controller.log").getFile());
+        String absolutePath = file.getAbsolutePath();
+        List<String> logContent = logCollectionService.getTopLogContentFromFile(file.getAbsolutePath().replace(file.getName(), ""),
+                "controller.log", 5);
+
+        assertNotNull(logContent);
+        assertEquals(logContent.size(), 5);
+    }
 }

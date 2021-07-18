@@ -60,7 +60,8 @@ public class LogCollectionController
             throw new Exception("Provide a file name");
         }
 
-        List<String> logContents = logCollectionService.getTopLogContentFromFile(fileName, topN);
+        List<String> logContents = logCollectionService.getTopLogContentFromFile(ROOT_DIR, fileName,
+                topN);
 
         if(logContents.isEmpty())
         {

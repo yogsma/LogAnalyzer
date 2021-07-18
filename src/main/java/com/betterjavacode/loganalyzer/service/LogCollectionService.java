@@ -72,9 +72,9 @@ public class LogCollectionService
         return null;
     }
 
-    public List<String> getTopLogContentFromFile (String fileName, int topN)
+    public List<String> getTopLogContentFromFile (String dir, String fileName, int topN)
     {
-        return getLogContentFromFile(ROOT_DIR, fileName,0, topN);
+        return getLogContentFromFile(dir, fileName,0, topN);
     }
 
     public List<String> searchForTextInLogFiles (String keyword)
