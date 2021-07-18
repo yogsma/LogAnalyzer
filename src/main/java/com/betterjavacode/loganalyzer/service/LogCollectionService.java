@@ -43,7 +43,7 @@ public class LogCollectionService
     }
 
 
-    public File findFileFromDirectory(String dir, String fileName)
+    private File findFileFromDirectory(String dir, String fileName)
     {
         File[] files = new File(dir).listFiles();
         if(files != null)
