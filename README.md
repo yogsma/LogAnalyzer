@@ -41,7 +41,9 @@ There are two ways you can run this project.
   - java -jar loganalyzer-0.0.1-SNAPSHOT.jar
   - Once the application started, you can access http://localhost:8080/home
   - Submit the search query. If searching for a file, enter the file name and select the checkbox 
-    for file. If searching for text/keyword, enter your text in the search box.
+    for file. If searching for text/keyword, enter your text in the search box. If you are 
+    running the application on Windows, you will need `/var/log` directory on your C drive. On 
+    Linux or Unix machine, `/var/log` should be available automatically.
 
 - The application is protected by basic authorization. Username - `adminuser` and Password - 
   `adminpassword`. You will need the same username and password if you want to access the API 
