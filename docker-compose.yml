@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "8080:8080"
+    networks:
+      - common-network
+
+networks:
+  common-network:
+    driver: bridge
