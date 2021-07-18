@@ -5,6 +5,9 @@ content of specified file, or top content of the specified file or just search f
 - API to get the top content of log file - http://localhost:8080/v1/loganalyzer/logs/top?fileName=$fileName&top=$top
 - API to search text/keyword from log files - http://localhost:8080/v1/loganalyzer/logs/search?keyword=$keyword  
 
+NOTE - This should not be used in Production with http protocol. This is only for developmental 
+purposes.
+
 ### **Table of Content**
 - [Getting Started](#Getting-Started)
 - [Testing](#Testing)
