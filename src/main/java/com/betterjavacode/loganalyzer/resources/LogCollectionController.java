@@ -8,6 +8,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +22,7 @@ public class LogCollectionController
 {
     @Autowired
     private LogCollectionService logCollectionService;
+    private static final String ROOT_DIR = "\\var\\log";
 
     @GetMapping
     public ResponseEntity<Map<String,Object>> getLogContent(@RequestParam("fileName") String fileName,
@@ -32,8 +37,9 @@ public class LogCollectionController
             throw new Exception("Provide a file name");
         }
 
-        List<String> logContents = logCollectionService.getLogContentFromFile(page, size,
-                fileName);
+        List<String> logContents = logCollectionService.getLogContentFromFile(ROOT_DIR,
+                fileName,
+                page, size);
 
         if(logContents.isEmpty())
         {
@@ -68,9 +74,10 @@ public class LogCollectionController
     }
 
     @GetMapping("/search")
-    public ResponseEntity<Map<String, Object>> searchLogContent(@RequestParam("keyword") String keyword)
+    public ResponseEntity<Map<String, Object>> searchLogContent(@RequestParam("keyword") String keyword) throws UnsupportedEncodingException
     {
-        List<String> matchingContent = logCollectionService.searchForTextInLogFiles(keyword);
+        String decodedKeyword = URLDecoder.decode(keyword, StandardCharsets.UTF_8.toString());
+        List<String> matchingContent = logCollectionService.searchForTextInLogFiles(decodedKeyword);
 
         if(matchingContent.isEmpty())
         {
@@ -78,7 +85,7 @@ public class LogCollectionController
         }
 
         Map<String, Object> responseObject = new HashMap<>();
-        responseObject.put("result", matchingContent);
+        responseObject.put("logcontent", matchingContent);
 
         return new ResponseEntity<>(responseObject, HttpStatus.OK);
     }

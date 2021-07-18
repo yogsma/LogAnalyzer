@@ -19,10 +19,10 @@ public class LogCollectionService
     private static final Logger logger = LoggerFactory.getLogger(LogCollectionService.class);
     private static final String ROOT_DIR = "\\var\\log";
 
-    public List<String> getLogContentFromFile (int pageNumber, int pageSize,
-                                                   String fileName)
+    public List<String> getLogContentFromFile (String dir, String fileName, int pageNumber,
+                                               int pageSize)
     {
-        File file = findFileFromDirectory(fileName);
+        File file = findFileFromDirectory(dir, fileName);
 
         if(file != null)
         {
@@ -43,9 +43,9 @@ public class LogCollectionService
     }
 
 
-    private File findFileFromDirectory(String fileName)
+    public File findFileFromDirectory(String dir, String fileName)
     {
-        File[] files = new File("C://var//log").listFiles();
+        File[] files = new File(dir).listFiles();
         if(files != null)
         {
             return getFile(fileName, files);
@@ -74,7 +74,7 @@ public class LogCollectionService
 
     public List<String> getTopLogContentFromFile (String fileName, int topN)
     {
-        return getLogContentFromFile(0, topN, fileName);
+        return getLogContentFromFile(ROOT_DIR, fileName,0, topN);
     }
 
     public List<String> searchForTextInLogFiles (String keyword)
@@ -101,32 +101,6 @@ public class LogCollectionService
 
         return result;
     }
-
-    /* private List<String> searchFilesFromDirectory(String dir, String keyword)
-    {
-        List<String> content = new ArrayList<>();
-        Path path = Paths.get(dir);
-        try(DirectoryStream<Path> directoryStream = Files.newDirectoryStream(path))
-        {
-            for(Path p : directoryStream)
-            {
-                if(Files.isRegularFile(p) && Files.isReadable(p))
-                {
-                    List<String> fileMatchingContent = searchContent(p, keyword);
-                    if(!fileMatchingContent.isEmpty())
-                    {
-                        content.addAll(fileMatchingContent);
-                    }
-                }
-            }
-        }
-        catch (IOException e)
-        {
-            logger.error("Error accessing file", e);
-        }
-
-        return content;
-    } */
 
     private List<String> searchContent (Path path, String keyword)
     {
