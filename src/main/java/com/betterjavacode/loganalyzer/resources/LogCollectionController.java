@@ -22,7 +22,15 @@ public class LogCollectionController
 {
     @Autowired
     private LogCollectionService logCollectionService;
-    private static final String ROOT_DIR = "\\var\\log";
+    private static String ROOT_DIR;
+    static {
+        if(System.getProperty("os.name").contains("Windows")) {
+            ROOT_DIR = "\\var\\log";
+        }
+        else {
+            ROOT_DIR = "/var/log";
+        }
+    }
 
     @GetMapping
     public ResponseEntity<Map<String,Object>> getLogContent(@RequestParam("fileName") String fileName,
@@ -36,6 +44,7 @@ public class LogCollectionController
         {
             throw new Exception("Provide a file name");
         }
+
 
         List<String> logContents = logCollectionService.getLogContentFromFile(ROOT_DIR,
                 fileName,
@@ -78,7 +87,8 @@ public class LogCollectionController
     public ResponseEntity<Map<String, Object>> searchLogContent(@RequestParam("keyword") String keyword) throws UnsupportedEncodingException
     {
         String decodedKeyword = URLDecoder.decode(keyword, StandardCharsets.UTF_8.toString());
-        List<String> matchingContent = logCollectionService.searchForTextInLogFiles(decodedKeyword);
+        List<String> matchingContent =
+                logCollectionService.searchForTextInLogFiles(ROOT_DIR, decodedKeyword);
 
         if(matchingContent.isEmpty())
         {

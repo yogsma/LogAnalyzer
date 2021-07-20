@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 import java.util.stream.Collectors;
 
 
@@ -17,7 +18,6 @@ import java.util.stream.Collectors;
 public class LogCollectionService
 {
     private static final Logger logger = LoggerFactory.getLogger(LogCollectionService.class);
-    private static final String ROOT_DIR = "\\var\\log";
 
     public List<String> getLogContentFromFile (String dir, String fileName, int pageNumber,
                                                int pageSize)
@@ -29,7 +29,19 @@ public class LogCollectionService
             try
             {
                 BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
-                List<String> list = bufferedReader.lines().skip(pageNumber * pageSize).limit(pageSize).collect(Collectors.toList());
+                Stack<String> lines = new Stack<>();
+                String line = bufferedReader.readLine();
+                while(line != null)
+                {
+                    lines.push(line);
+                    line = bufferedReader.readLine();
+                }
+                List<String> list = new ArrayList<>();
+                int totalLines = lines.size();
+                for(int i = pageNumber * pageSize; (i < pageSize && i < totalLines); i++)
+                {
+                    list.add(lines.pop());
+                }
 
                 bufferedReader.close();
                 return list;
@@ -77,9 +89,9 @@ public class LogCollectionService
         return getLogContentFromFile(dir, fileName,0, topN);
     }
 
-    public List<String> searchForTextInLogFiles (String keyword)
+    public List<String> searchForTextInLogFiles (String dir, String keyword)
     {
-        return searchMatchingTextFromFilesInDirectory(ROOT_DIR, keyword);
+        return searchMatchingTextFromFilesInDirectory(dir, keyword);
     }
 
     private List<String> searchMatchingTextFromFilesInDirectory(String dir, String keyword)
