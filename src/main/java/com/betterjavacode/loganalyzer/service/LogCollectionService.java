@@ -38,8 +38,17 @@ public class LogCollectionService
                 }
                 List<String> list = new ArrayList<>();
                 int totalLines = lines.size();
-                for(int i = pageNumber * pageSize; (i < pageSize && i < totalLines); i++)
+                int count = 0;
+                for(int i = pageNumber * pageSize; (i < ((1 + pageNumber) * pageSize) && i < totalLines); i++)
                 {
+                    if(pageNumber > 0)
+                    {
+                        while(count < (pageNumber * pageSize))
+                        {
+                            lines.pop();
+                            count++;
+                        }
+                    }
                     list.add(lines.pop());
                 }
 
